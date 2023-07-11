@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, BadRequestException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { COMMENT_MODEL } from 'constants/constants';
@@ -18,40 +18,67 @@ export class CommentsService {
   }
 
   async findAll(id: number) {
-    const comments: any = await this.comment.findAll({
-      where: {
-        postId: id,
-      },
-    });
-    for (let i = 0; i < comments.length; i++) {
-      if (!comments[i].hasRebly) {
-        continue;
+    try {
+      const comments: any = await this.comment.findAll({
+        where: {
+          postId: id,
+        },
+      });
+      for (let i = 0; i < comments.length; i++) {
+        if (!comments[i].hasRebly) {
+          continue;
+        }
+        const reblys = await this.findAllRebly(comments[i].id);
+        const comment = comments[i];
+        comments[i] = {
+          comment,
+          reblys,
+        };
       }
-      const reblys = await this.findAllRebly(comments[i].id);
-      const comment = comments[i];
-      comments[i] = {
-        comment,
-        reblys,
-      };
+      return comments;
+    } catch (e) {
+      throw new BadRequestException("wrong id")
     }
-    return comments;
   }
 
   async findAllRebly(id: number) {
-    const comments = await this.comment.findAll({
-      where: {
-        reblyComentId: id,
-      },
-    });
-    return comments;
+    try {
+      const comments = await this.comment.findAll({
+        where: {
+          reblyComentId: id,
+        },
+      });
+      return comments;
+
+    } catch (e) {
+      throw new BadRequestException("wrong id")
+    }
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  edit(updateCommentDto: UpdateCommentDto) {
+    const comment = await this.comment.update({
+      title: updateCommentDto.title,
+      description: updateCommentDto.description,
+      photots: updateCommentDto.photos,
+    }, {
+      where: {
+        id: updateCommentDto.id,
+      }
+    })
+    return `This action updates a comment`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} comment`;
+    try {
+      await this.comment.destroy({
+        where: {
+          id,
+        }
+      })
+      return 'comment is deleted';
+    } catch (e) {
+      throw new BadRequestException("wrong id")
+    }
   }
 }
 

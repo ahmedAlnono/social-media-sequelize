@@ -11,6 +11,7 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { FindCommentDto } from './dto/find-comment.dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -26,9 +27,14 @@ export class CommentsController {
     return this.commentsService.findAll(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(+id, updateCommentDto);
+  @Post('/update')
+  edit(@Body() updateCommentDto: UpdateCommentDto) {
+    return this.commentsService.edit(updateCommentDto);
+  }
+
+  @Get('reblys')
+  findAllRebly(@Body() id: FindCommentDto) {
+    return this.commentsService.findAllRebly(id);
   }
 
   @Delete(':id')
