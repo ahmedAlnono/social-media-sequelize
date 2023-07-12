@@ -64,4 +64,10 @@ export class Comment extends Model {
     field: 'has_rebly',
   })
   hasRebly: boolean;
+
+  @Column({
+    allowNull: false,
+    defaultValue: 0,
+  })
+  views: number;
 }

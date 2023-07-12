@@ -13,6 +13,7 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { FindPostDto } from './dto/find-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -41,13 +42,13 @@ export class PostsController {
     return this.postsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto);
+  @Patch('')
+  update(@Body() updatePostDto: UpdatePostDto) {
+    return this.postsService.update(updatePostDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+  @Delete('')
+  remove(@Body() findPostDto: FindPostDto) {
+    return this.postsService.remove(findPostDto);
   }
 }

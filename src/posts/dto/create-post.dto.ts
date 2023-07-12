@@ -20,5 +20,5 @@ export class CreatePostDto {
 
   @IsNumber()
   @IsPositive()
-  user: number;
+  userId: number;
 }

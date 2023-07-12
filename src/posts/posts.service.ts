@@ -1,4 +1,10 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { FindPostDto } from './dto/find-post.dto';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { POST_MODEL, USER_MODEL } from 'constants/constants';
@@ -23,7 +29,7 @@ export class PostsService {
       const posts = await this.post.create({
         title: createPostDto.title,
         description: createPostDto.description,
-        user: createPostDto.user,
+        userId: createPostDto.userId,
         photos,
       });
       return posts;
@@ -33,28 +39,58 @@ export class PostsService {
   }
 
   async findAll() {
-    const query = `
-    SELECT * FROM (
-      SELECT * FROM posts
-      ORDER BY id DESC
-      LIMIT 500
-    ) AS RANDOM_OUTPUT
-    ORDER BY RAND()
-    LIMIT 100;
-  `;
-    const [posts] = await this.post.sequelize.query(query);
-    return posts;
+    try {
+      const query = `
+      SELECT * FROM (
+        SELECT * FROM posts
+        ORDER BY id DESC
+        LIMIT 500
+      ) AS RANDOM_OUTPUT
+      ORDER BY RAND()
+      LIMIT 100;
+    `;
+      const [posts] = await this.post.sequelize.query(query);
+      return posts;
+    } catch (e) {
+      throw new ForbiddenException('try again');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    try {
+      const post = await this.post.findByPk(id);
+      await post.$set('watches', post.watches + 1);
+      return post;
+    } catch (e) {
+      throw new BadRequestException('wrong id');
+    }
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(updatePostDto: UpdatePostDto) {
+    try {
+      const post = await this.post.findByPk(updatePostDto.id);
+      if (updatePostDto.title) {
+        await post.$set('title', updatePostDto.title);
+      }
+      if (updatePostDto.description) {
+        await post.$set('description', updatePostDto.description);
+      }
+      return true;
+    } catch (e) {
+      throw new ForbiddenException('unknown error');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(findPostDto: FindPostDto) {
+    try {
+      await this.post.destroy({
+        where: {
+          id: findPostDto.id,
+        },
+      });
+      return true;
+    } catch (e) {
+      throw new BadRequestException('wrong id');
+    }
   }
 }

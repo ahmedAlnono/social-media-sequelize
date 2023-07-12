@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { PHOTOS_MODEL, POST_MODEL } from 'constants/constants';
+import { POST_MODEL } from 'constants/constants';
 import { Post } from 'src/models/post.model';
 
 @Injectable()

@@ -24,17 +24,17 @@ export class CommentsService {
           postId: id,
         },
       });
-      for (let i = 0; i < comments.length; i++) {
-        if (!comments[i].hasRebly) {
-          continue;
-        }
-        const reblys = await this.findAllRebly(comments[i].id);
-        const comment = comments[i];
-        comments[i] = {
-          comment,
-          reblys,
-        };
-      }
+      // for (let i = 0; i < comments.length; i++) {
+      //   if (!comments[i].hasRebly) {
+      //     continue;
+      //   }
+      //   const reblys = await this.findAllRebly(comments[i].id);
+      //   const comment = comments[i];
+      //   comments[i] = {
+      //     comment,
+      //     reblys,
+      //   };
+      // }
       return comments;
     } catch (e) {
       throw new BadRequestException('wrong id');
@@ -67,7 +67,7 @@ export class CommentsService {
         },
       },
     );
-    return `This action updates a comment`;
+    return comment;
   }
 
   async remove(id: number) {

@@ -4,6 +4,7 @@ import {
   IsString,
   MaxLength,
   IsNumber,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateCommentDto {
@@ -28,5 +29,6 @@ export class CreateCommentDto {
 
   @IsNumber()
   @IsPositive()
-  reblyComentId: number;
+  @IsOptional()
+  reblyComentId?: number;
 }

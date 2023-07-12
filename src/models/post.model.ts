@@ -57,4 +57,9 @@ export class Post extends Model {
   edited: boolean;
 
   photos: string;
+
+  set addWatche(value: any) {
+    console.log(this.watches + 1);
+    // this.setDataValue('watches', this.watches + 1);
+  }
 }
