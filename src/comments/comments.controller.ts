@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   ParseIntPipe,
@@ -34,7 +33,7 @@ export class CommentsController {
 
   @Get('reblys')
   findAllRebly(@Body() id: FindCommentDto) {
-    return this.commentsService.findAllRebly(id);
+    return this.commentsService.findAllRebly(id.id);
   }
 
   @Delete(':id')

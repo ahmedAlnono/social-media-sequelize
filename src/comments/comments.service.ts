@@ -37,7 +37,7 @@ export class CommentsService {
       }
       return comments;
     } catch (e) {
-      throw new BadRequestException("wrong id")
+      throw new BadRequestException('wrong id');
     }
   }
 
@@ -49,35 +49,37 @@ export class CommentsService {
         },
       });
       return comments;
-
     } catch (e) {
-      throw new BadRequestException("wrong id")
+      throw new BadRequestException('wrong id');
     }
   }
 
-  edit(updateCommentDto: UpdateCommentDto) {
-    const comment = await this.comment.update({
-      title: updateCommentDto.title,
-      description: updateCommentDto.description,
-      photots: updateCommentDto.photos,
-    }, {
-      where: {
-        id: updateCommentDto.id,
-      }
-    })
+  async edit(updateCommentDto: UpdateCommentDto) {
+    const comment = await this.comment.update(
+      {
+        title: updateCommentDto.title,
+        description: updateCommentDto.description,
+        photots: updateCommentDto.photos,
+      },
+      {
+        where: {
+          id: updateCommentDto.id,
+        },
+      },
+    );
     return `This action updates a comment`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     try {
       await this.comment.destroy({
         where: {
           id,
-        }
-      })
+        },
+      });
       return 'comment is deleted';
     } catch (e) {
-      throw new BadRequestException("wrong id")
+      throw new BadRequestException('wrong id');
     }
   }
 }
