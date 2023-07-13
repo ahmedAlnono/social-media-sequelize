@@ -9,6 +9,7 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -25,6 +26,7 @@ export class PostsController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [new MaxFileSizeValidator({ maxSize: 100000000 })],
+        fileIsRequired: false,
       }),
     )
     files: Express.Multer.File[],
@@ -50,5 +52,10 @@ export class PostsController {
   @Delete('')
   remove(@Body() findPostDto: FindPostDto) {
     return this.postsService.remove(findPostDto);
+  }
+
+  @Get('user/:id')
+  findUserPosts(@Param('id', new ParseIntPipe()) id: number) {
+    return this.postsService.findUserPosts(id);
   }
 }

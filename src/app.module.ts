@@ -9,7 +9,14 @@ import { CommentsModule } from './comments/comments.module';
 import { FilesModule } from './files/files.module';
 
 @Module({
-  imports: [PostsModule, AuthModule, UserModule, DatabaseModule, CommentsModule, FilesModule],
+  imports: [
+    PostsModule,
+    AuthModule,
+    UserModule,
+    DatabaseModule,
+    CommentsModule,
+    FilesModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -21,18 +21,38 @@ export class PostsService {
   ) {}
   async create(createPostDto: CreatePostDto, files: Express.Multer.File[]) {
     try {
-      const FileNames = [];
-      for (let i = 0; i < files.length; i++) {
-        FileNames.push(files[i].filename);
-      }
-      const photos = FileNames.join(' ');
-      const posts = await this.post.create({
-        title: createPostDto.title,
-        description: createPostDto.description,
-        userId: createPostDto.userId,
-        photos,
+      const posts = await this.post.findAll({
+        where: {
+          userId: createPostDto.userId,
+        },
+        order: [['createdAt', 'DESC']],
+        limit: 5,
       });
-      return posts;
+      const postTime = posts[posts.length - 1].createdAt;
+      const nowDate = new Date();
+      const time = nowDate.getTime() - postTime.getTime();
+      const timeDifferenceInDays = Math.floor(time / (1000 * 60 * 60 * 24));
+      if (timeDifferenceInDays >= 1) {
+        const FileNames = [];
+        let photos = '';
+        if (files) {
+          for (let i = 0; i < files.length; i++) {
+            FileNames.push(files[i].filename);
+          }
+          photos = FileNames.join(' ');
+        } else {
+          photos = null;
+        }
+        const post = await this.post.create({
+          title: createPostDto.title,
+          description: createPostDto.description,
+          userId: createPostDto.userId,
+          photos,
+        });
+        return post;
+      } else {
+        throw new BadRequestException('user can create just 5 post per day');
+      }
     } catch (e) {
       throw new BadRequestException('wrong data');
     }
@@ -92,5 +112,21 @@ export class PostsService {
     } catch (e) {
       throw new BadRequestException('wrong id');
     }
+  }
+
+  async findUserPosts(id: number) {
+    const posts = await this.post.findAll({
+      where: {
+        userId: id,
+      },
+      order: [['createdAt', 'DESC']],
+      limit: 5,
+    });
+    const postTime = posts[posts.length - 1].createdAt;
+    const nowDate = new Date();
+    const time = nowDate.getTime() - postTime.getTime();
+    const timeDifferenceInDays = Math.floor(time / (1000 * 60 * 60 * 24));
+    console.log(timeDifferenceInDays);
+    return posts;
   }
 }
