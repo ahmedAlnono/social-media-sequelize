@@ -62,14 +62,26 @@ export class PostsService {
     try {
       const query = `
       SELECT * FROM (
-        SELECT * FROM posts
+        SELECT id, title, user_id, watches, edited, photos FROM posts
         ORDER BY id DESC
         LIMIT 500
       ) AS RANDOM_OUTPUT
       ORDER BY RAND()
       LIMIT 100;
     `;
-      const [posts] = await this.post.sequelize.query(query);
+      const [posts] = (await this.post.sequelize.query(query)) as any;
+      for (let i = 0; i < posts['length']; i++) {
+        await this.post.update(
+          {
+            watches: posts[i].watches + 1,
+          },
+          {
+            where: {
+              id: posts[i].id,
+            },
+          },
+        );
+      }
       return posts;
     } catch (e) {
       throw new ForbiddenException('try again');
