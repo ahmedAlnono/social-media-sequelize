@@ -71,3 +71,79 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+# Models
+
+## User Model
+
+The <span style="color:#008080">User</span> model represents a user in the system.
+
+### Properties
+
+- <span style="color:#008080">name</span> (`string`): The name of the user.
+- <span style="color:#008080">email</span> (`string`): The email address of the user. It must be unique and in a valid email format.
+- <span style="color:#008080">hash</span> (`string`): The hashed password of the user.
+
+### Associations
+
+- <span style="color:#008080">posts</span> (`hasMany`): A user can have multiple posts.
+
+---
+
+## Post Model
+
+The <span style="color:#800080">Post</span> model represents a post in the system.
+
+### Properties
+
+- <span style="color:#800080">title</span> (`string`): The title of the post.
+- <span style="color:#800080">description</span> (`string`): The description of the post.
+- <span style="color:#800080">watches</span> (`number`): The number of watches/views of the post.
+- <span style="color:#800080">edited</span> (`boolean`): Indicates whether the post has been edited.
+- <span style="color:#800080">photos</span> (`string`): The URL or path to the post's photos.
+
+### Associations
+
+- <span style="color:#800080">user</span> (`belongsTo`): The user who created the post.
+- <span style="color:#800080">comments</span> (`hasMany`): The comments associated with the post.
+
+---
+
+## Comment Model
+
+The <span style="color:#0000FF">Comment</span> model represents a comment on a post.
+
+### Properties
+
+- <span style="color:#0000FF">title</span> (`string`): The title of the comment.
+- <span style="color:#0000FF">description</span> (`string`): The description of the comment.
+- <span style="color:#0000FF">photos</span> (`string`): The URL or path to the comment's photos.
+- <span style="color:#0000FF">hasRebly</span> (`boolean`): Indicates whether the comment has a reply.
+- <span style="color:#0000FF">views</span> (`number`): The number of views of the comment.
+
+### Associations
+
+- <span style="color:#0000FF">post</span> (`belongsTo`): The post to which the comment belongs.
+- <span style="color:#0000FF">user</span> (`belongsTo`): The user who posted the comment.
+- <span style="color:#0000FF">reblys</span> (`hasMany`): The replies to the comment.
+
+---
+
+## Scopes
+
+The models have two predefined scopes: <span style="color:#008000">deleted</span> and <span style="color:#008000">active</span>.
+
+- <span style="color:#008000">deleted</span>: Returns records where the `deletedAt` field is not null.
+- <span style="color:#008000">active</span>: Returns records where the `deletedAt` field is null.
+
+These scopes can be used to filter the records based on their deletion status.
+
+---
+
+## Additional Notes
+
+- The models use the `sequelize-typescript` library for Sequelize integration.
+- The tables associated with the models have the following attributes:
+  - `paranoid: true`: Enables soft deletion, where records are not physically deleted but marked as deleted using the `deletedAt` field.
+  - `underscored: true`: Uses snake_case for table and column names in the database.
+
