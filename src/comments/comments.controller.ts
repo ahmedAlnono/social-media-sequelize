@@ -11,14 +11,19 @@ import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { FindCommentDto } from './dto/find-comment.dto';
+import { UserIdentity } from 'src/user/user-identity.decorator';
+import { UserPayload } from 'src/posts/dto/userIdentiti.dto';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  create(
+    @UserIdentity() user: UserPayload,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
+    return this.commentsService.create(createCommentDto, user);
   }
 
   @Get(':id')
@@ -27,8 +32,11 @@ export class CommentsController {
   }
 
   @Post('/update')
-  edit(@Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.edit(updateCommentDto);
+  edit(
+    @UserIdentity() user: UserPayload,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return this.commentsService.edit(updateCommentDto, user);
   }
 
   @Get('reblys')

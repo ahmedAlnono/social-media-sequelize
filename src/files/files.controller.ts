@@ -36,20 +36,20 @@ export class FilesController {
   //   return photos;
   // }
 
-  @Post('upload/thumbnail/:id')
-  @UseInterceptors(FileInterceptor('file', {}))
-  uploadThumbnail(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [new MaxFileSizeValidator({ maxSize: 100000000 })],
-      }),
-    )
-    files: Express.Multer.File[],
-    @Param('id', new ParseIntPipe())
-    id: number,
-  ) {
-    return this.filesService.uploadPhotos(id, files);
-  }
+  // @Post('upload/thumbnail/:id')
+  // @UseInterceptors(FileInterceptor('file', {}))
+  // uploadThumbnail(
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [new MaxFileSizeValidator({ maxSize: 100000000 })],
+  //     }),
+  //   )
+  //   files: Express.Multer.File[],
+  //   @Param('id', new ParseIntPipe())
+  //   id: number,
+  // ) {
+  //   return this.filesService.uploadPhotos(id, files);
+  // }
 
   @Get('get/:id')
   getFile(@Param('id') id: string) {

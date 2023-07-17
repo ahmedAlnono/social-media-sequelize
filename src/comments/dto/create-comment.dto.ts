@@ -21,10 +21,6 @@ export class CreateCommentDto {
 
   @IsNumber()
   @IsPositive()
-  userId: number;
-
-  @IsNumber()
-  @IsPositive()
   postId: number;
 
   @IsNumber()

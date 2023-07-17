@@ -1,8 +1,14 @@
-import { Inject, Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { COMMENT_MODEL } from 'constants/constants';
 import { Comment } from 'src/models/comment.model';
+import { UserPayload } from 'src/posts/dto/userIdentiti.dto';
 
 @Injectable()
 export class CommentsService {
@@ -10,9 +16,10 @@ export class CommentsService {
     @Inject(COMMENT_MODEL)
     private comment: typeof Comment,
   ) {}
-  async create(createCommentDto: CreateCommentDto) {
+  async create(createCommentDto: CreateCommentDto, user: UserPayload) {
     const comment = await this.comment.create({
       ...createCommentDto,
+      userId: user.sub,
     });
     return comment;
   }
@@ -54,20 +61,25 @@ export class CommentsService {
     }
   }
 
-  async edit(updateCommentDto: UpdateCommentDto) {
-    const comment = await this.comment.update(
-      {
-        title: updateCommentDto.title,
-        description: updateCommentDto.description,
-        photots: updateCommentDto.photos,
-      },
-      {
-        where: {
-          id: updateCommentDto.id,
+  async edit(updateCommentDto: UpdateCommentDto, user: UserPayload) {
+    try {
+      await this.comment.update(
+        {
+          title: updateCommentDto.title,
+          description: updateCommentDto.description,
+          photots: updateCommentDto.photos,
         },
-      },
-    );
-    return comment;
+        {
+          where: {
+            id: updateCommentDto.id,
+            userId: user.sub,
+          },
+        },
+      );
+      return true;
+    } catch (e) {
+      throw new ForbiddenException("cann't update comment");
+    }
   }
 
   async remove(id: number) {

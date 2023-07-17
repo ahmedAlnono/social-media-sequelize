@@ -14,6 +14,7 @@ import { FindeUserDto } from 'src/user/dto/find-user.dto';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from 'src/user/public.decorator';
+import { GlobalAuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -39,6 +40,7 @@ export class AuthController {
     return req['user'];
   }
 
+  @UseGuards(GlobalAuthGuard)
   @Get('profile')
   profile(@Req() req: Request) {
     return req['user'];

@@ -10,6 +10,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { POST_MODEL, USER_MODEL } from 'constants/constants';
 import { Post } from 'src/models/post.model';
 import { User } from 'src/models/user.model';
+import { UserPayload } from './dto/userIdentiti.dto';
 
 @Injectable()
 export class PostsService {
@@ -98,26 +99,31 @@ export class PostsService {
     }
   }
 
-  async update(updatePostDto: UpdatePostDto) {
+  async update(updatePostDto: UpdatePostDto, user: UserPayload) {
     try {
       const post = await this.post.findByPk(updatePostDto.id);
-      if (updatePostDto.title) {
-        await post.$set('title', updatePostDto.title);
+      if (+post.userId == user.sub) {
+        if (updatePostDto.title) {
+          await post.$set('title', updatePostDto.title);
+        }
+        if (updatePostDto.description) {
+          await post.$set('description', updatePostDto.description);
+        }
+        return true;
+      } else {
+        throw new BadRequestException('not your post');
       }
-      if (updatePostDto.description) {
-        await post.$set('description', updatePostDto.description);
-      }
-      return true;
     } catch (e) {
       throw new ForbiddenException('unknown error');
     }
   }
 
-  async remove(findPostDto: FindPostDto) {
+  async remove(findPostDto: FindPostDto, user: UserPayload) {
     try {
       await this.post.destroy({
         where: {
           id: findPostDto.id,
+          userId: user.sub,
         },
       });
       return true;

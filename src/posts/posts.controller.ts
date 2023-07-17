@@ -9,12 +9,14 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { FindPostDto } from './dto/find-post.dto';
+import { Public } from 'src/user/public.decorator';
+import { UserIdentity } from 'src/user/user-identity.decorator';
+import { UserPayload } from './dto/userIdentiti.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -34,28 +36,33 @@ export class PostsController {
     return this.postsService.create(createPostDto, files);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.postsService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);
   }
 
   @Patch('')
-  update(@Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(updatePostDto);
+  update(
+    @UserIdentity() user: UserPayload,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return this.postsService.update(updatePostDto, user);
   }
 
   @Delete('')
-  remove(@Body() findPostDto: FindPostDto) {
-    return this.postsService.remove(findPostDto);
+  remove(@UserIdentity() user: UserPayload, @Body() findPostDto: FindPostDto) {
+    return this.postsService.remove(findPostDto, user);
   }
 
-  @Get('user/:id')
-  findUserPosts(@Param('id', new ParseIntPipe()) id: number) {
-    return this.postsService.findUserPosts(id);
+  @Get('user')
+  findUserPosts(@UserIdentity() user: UserPayload) {
+    return this.postsService.findUserPosts(user.sub);
   }
 }

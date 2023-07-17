@@ -1,5 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { BadGatewayException, Inject, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { USER_MODEL } from 'constants/constants';
 import { User } from 'src/models/user.model';
@@ -10,19 +9,41 @@ export class UserService {
     @Inject(USER_MODEL)
     private user: typeof User,
   ) {}
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  async findOne(id: number) {
+    return await this.user.findByPk(id, {
+      attributes: ['name', 'email'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      await this.user.update(
+        {
+          ...updateUserDto,
+        },
+        {
+          where: {
+            id,
+          },
+        },
+      );
+      return true;
+    } catch (e) {
+      throw new BadGatewayException('user not found');
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    try {
+      await this.user.destroy({
+        where: {
+          id,
+        },
+      });
+      return true;
+    } catch (e) {
+      throw new BadGatewayException('user not found');
+    }
   }
 }
