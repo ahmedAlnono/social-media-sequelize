@@ -7,8 +7,7 @@ import { UserModule } from './user/user.module';
 import { DatabaseModule } from './db/database.module';
 import { CommentsModule } from './comments/comments.module';
 import { FilesModule } from './files/files.module';
-import { APP_GUARD } from '@nestjs/core';
-import { GlobalAuthGuard } from './auth/auth.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -20,12 +19,6 @@ import { GlobalAuthGuard } from './auth/auth.guard';
     FilesModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useValue: GlobalAuthGuard,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

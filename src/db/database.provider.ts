@@ -6,6 +6,7 @@ import { User } from 'src/models/user.model';
 
 export const databaseProviders = [
   {
+    inject: [ConfigService],
     provide: 'SEQUELIZE',
     useFactory: async (configService: ConfigService) => {
       const sequelize = new Sequelize({

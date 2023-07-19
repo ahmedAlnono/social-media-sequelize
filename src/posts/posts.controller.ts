@@ -24,6 +24,7 @@ export class PostsController {
 
   @Post()
   create(
+    @UserIdentity() user: UserPayload,
     @Body() createPostDto: CreatePostDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -33,7 +34,7 @@ export class PostsController {
     )
     files: Express.Multer.File[],
   ) {
-    return this.postsService.create(createPostDto, files);
+    return this.postsService.create(createPostDto, files, user);
   }
 
   @Public()

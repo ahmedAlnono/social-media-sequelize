@@ -20,11 +20,15 @@ export class PostsService {
     @Inject(USER_MODEL)
     private user: typeof User,
   ) {}
-  async create(createPostDto: CreatePostDto, files: Express.Multer.File[]) {
+  async create(
+    createPostDto: CreatePostDto,
+    files: Express.Multer.File[],
+    user: UserPayload,
+  ) {
     try {
       const posts = await this.post.findAll({
         where: {
-          userId: createPostDto.userId,
+          userId: user.sub,
         },
         order: [['createdAt', 'DESC']],
         limit: 5,
@@ -47,7 +51,7 @@ export class PostsService {
         const post = await this.post.create({
           title: createPostDto.title,
           description: createPostDto.description,
-          userId: createPostDto.userId,
+          userId: user.sub,
           photos,
         });
         return post;
