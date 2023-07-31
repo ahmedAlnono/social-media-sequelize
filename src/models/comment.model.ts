@@ -54,16 +54,16 @@ export class Comment extends Model {
   userId: User;
 
   @HasMany(() => Comment)
-  Reblys: Comment[];
+  Replys: Comment[];
 
   @Column
   photos: string;
 
   @Column({
     type: DataType.BOOLEAN,
-    field: 'has_rebly',
+    field: 'has_reply',
   })
-  hasRebly: boolean;
+  hasReply: boolean;
 
   @Column({
     allowNull: false,

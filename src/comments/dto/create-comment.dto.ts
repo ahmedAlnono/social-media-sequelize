@@ -26,5 +26,5 @@ export class CreateCommentDto {
   @IsNumber()
   @IsPositive()
   @IsOptional()
-  reblyComentId?: number;
+  replyComentId?: number;
 }

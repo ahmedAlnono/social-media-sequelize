@@ -39,9 +39,9 @@ export class CommentsController {
     return this.commentsService.edit(updateCommentDto, user);
   }
 
-  @Get('reblys')
+  @Get('replys')
   findAllRebly(@Body() id: FindCommentDto) {
-    return this.commentsService.findAllRebly(id.id);
+    return this.commentsService.findAllReplies(id.id);
   }
 
   @Delete(':id')

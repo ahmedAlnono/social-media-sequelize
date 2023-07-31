@@ -33,10 +33,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       accessToken,
     };
     console.log(profile);
-    const CreateUser = await this.user.create({
-      emial: profile.email,
-      password: profile.password,
-    });
+    // const CreateUser = await this.user.create({
+    //   emial: profile.email,
+    //   name: profile.name,
+    // });
     done(null, user);
   }
 }

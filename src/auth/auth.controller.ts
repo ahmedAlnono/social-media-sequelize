@@ -28,7 +28,7 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: FindeUserDto) {
+  async signIn(@Body() signInDto: FindeUserDto) {
     return this.authService.signin(signInDto);
   }
 

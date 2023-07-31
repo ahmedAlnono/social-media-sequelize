@@ -9,15 +9,20 @@ import { CommentsModule } from './comments/comments.module';
 import { FilesModule } from './files/files.module';
 import { APP_GUARD } from '@nestjs/core';
 import { GlobalAuthGuard } from './auth/auth.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     PostsModule,
     AuthModule,
     UserModule,
-    DatabaseModule,
+    DatabaseModule.register('development'),
     CommentsModule,
     FilesModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
   ],
   controllers: [AppController],
   providers: [

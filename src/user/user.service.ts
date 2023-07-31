@@ -1,13 +1,17 @@
 import { BadGatewayException, Inject, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { USER_MODEL } from 'constants/constants';
+import { NOTIFICATION_MODEL, USER_MODEL } from 'constants/constants';
 import { User } from 'src/models/user.model';
+import { Notification } from 'src/models/notification.model';
+import { userJwtPayload } from './dto/user-jwt-paylaod.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(USER_MODEL)
     private user: typeof User,
+    @Inject(NOTIFICATION_MODEL)
+    private notification: typeof Notification,
   ) {}
 
   async findOne(id: number) {
@@ -45,5 +49,14 @@ export class UserService {
     } catch (e) {
       throw new BadGatewayException('user not found');
     }
+  }
+
+  async findNotification(user: userJwtPayload) {
+    const notifications = await this.notification.findAll({
+      where: {
+        userId: user.sub,
+      },
+    });
+    return notifications;
   }
 }

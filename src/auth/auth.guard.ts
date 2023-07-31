@@ -31,7 +31,7 @@ export class GlobalAuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get('AUTH_SECRET'),
       });
-      request['user'] = payload;
+      request.user = payload;
     } catch (e) {
       throw new UnauthorizedException();
     }

@@ -6,20 +6,38 @@ import {
 } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { COMMENT_MODEL } from 'constants/constants';
+import {
+  COMMENT_MODEL,
+  NOTIFICATION_MODEL,
+  POST_MODEL,
+} from 'constants/constants';
 import { Comment } from 'src/models/comment.model';
 import { UserPayload } from 'src/posts/dto/userIdentiti.dto';
+import { Post } from 'src/models/post.model';
+import { Notification } from 'src/models/notification.model';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @Inject(COMMENT_MODEL)
     private comment: typeof Comment,
+
+    @Inject(POST_MODEL)
+    private post: typeof Post,
+
+    @Inject(NOTIFICATION_MODEL)
+    private notification: typeof Notification,
   ) {}
   async create(createCommentDto: CreateCommentDto, user: UserPayload) {
     const comment = await this.comment.create({
       ...createCommentDto,
       userId: user.sub,
+    });
+    const post = await this.post.findByPk(createCommentDto.postId);
+    // post.userId;
+    await this.notification.create({
+      userId: post.userId,
+      message: `${user.email} is comment in your post ${post.title}`,
     });
     return comment;
   }
@@ -48,7 +66,7 @@ export class CommentsService {
     }
   }
 
-  async findAllRebly(id: number) {
+  async findAllReplies(id: number) {
     try {
       const comments = await this.comment.findAll({
         where: {
@@ -95,8 +113,3 @@ export class CommentsService {
     }
   }
 }
-
-// @Inject(POST_MODEL)
-// private post: typeof Post,
-// @Inject(USER_MODEL)
-// private user: typeof User,

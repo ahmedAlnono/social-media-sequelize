@@ -54,11 +54,7 @@ export class AuthService {
       throw new ForbiddenException('wrong user data');
     }
   }
-  async signToken(
-    userId: number,
-    email: string,
-    password: string,
-  ): Promise<{ access_token: string }> {
+  async signToken(userId: number, email: string, password: string) {
     const payload = {
       sub: userId,
       email,

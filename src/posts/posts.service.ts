@@ -30,7 +30,7 @@ export class PostsService {
         where: {
           userId: user.sub,
         },
-        order: [['createdAt', 'DESC']],
+        order: [['id', 'DESC']],
         limit: 5,
       });
       const postTime = posts[posts.length - 1].createdAt;
