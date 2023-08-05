@@ -8,7 +8,7 @@ import { PostService } from './post.service';
 import { Server, Socket } from 'socket.io';
 import { socketMiddleware } from './ws.mw';
 import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
-import { UserIdentity } from 'src/user/user-identity.decorator';
+import { UserIdentity } from 'src/users/user-identity.decorator';
 import { UserPayload } from 'src/posts/dto/userIdentiti.dto';
 import { FindPostDto } from 'src/posts/dto/find-post.dto';
 
@@ -49,6 +49,7 @@ export class PostGateway {
     @UserIdentity() user: UserPayload,
     @MessageBody() data: FindPostDto,
   ) {
+    this.server.emit('postDeleted', data.id);
     return await this.postService.remove(data, user);
   }
 }

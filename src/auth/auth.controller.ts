@@ -9,11 +9,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { FindeUserDto } from 'src/user/dto/find-user.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { FindeUserDto } from 'src/users/dto/find-user.dto';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { Public } from 'src/user/public.decorator';
+import { Public } from 'src/users/public.decorator';
 
 @Controller('auth')
 export class AuthController {

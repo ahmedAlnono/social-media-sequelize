@@ -11,7 +11,7 @@ import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { FindCommentDto } from './dto/find-comment.dto';
-import { UserIdentity } from 'src/user/user-identity.decorator';
+import { UserIdentity } from 'src/users/user-identity.decorator';
 import { UserPayload } from 'src/posts/dto/userIdentiti.dto';
 
 @Controller('comments')

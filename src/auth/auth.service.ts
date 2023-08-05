@@ -5,9 +5,9 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/models/user.model';
-import { FindeUserDto } from 'src/user/dto/find-user.dto';
+import { FindeUserDto } from 'src/users/dto/find-user.dto';
 import * as bcrypt from 'bcrypt';
 import { USER_MODEL } from 'constants/constants';
 

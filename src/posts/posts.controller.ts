@@ -14,8 +14,8 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { FindPostDto } from './dto/find-post.dto';
-import { Public } from 'src/user/public.decorator';
-import { UserIdentity } from 'src/user/user-identity.decorator';
+import { Public } from 'src/users/public.decorator';
+import { UserIdentity } from 'src/users/user-identity.decorator';
 import { UserPayload } from './dto/userIdentiti.dto';
 
 @Controller('posts')
