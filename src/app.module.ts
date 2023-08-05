@@ -10,6 +10,7 @@ import { FilesModule } from './files/files.module';
 import { APP_GUARD } from '@nestjs/core';
 import { GlobalAuthGuard } from './auth/auth.guard';
 import { ConfigModule } from '@nestjs/config';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    PostModule,
   ],
   controllers: [AppController],
   providers: [
