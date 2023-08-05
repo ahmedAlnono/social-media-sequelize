@@ -6,5 +6,6 @@ import { PostProviders } from 'src/posts/post.provider';
 @Module({
   controllers: [CommentsController],
   providers: [CommentsService, ...PostProviders],
+  exports: [CommentsService],
 })
 export class CommentsModule {}

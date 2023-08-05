@@ -100,14 +100,14 @@ export class CommentsService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: number, user: UserPayload) {
     try {
-      await this.comment.destroy({
-        where: {
-          id,
-        },
-      });
-      return 'comment is deleted';
+      const comment = await this.comment.findByPk(id);
+      if (+comment.userId !== user.sub) {
+        throw new BadRequestException("user cann't remove comment");
+      }
+      await comment.destroy();
+      return true;
     } catch (e) {
       throw new BadRequestException('wrong id');
     }

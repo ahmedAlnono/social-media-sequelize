@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { GlobalAuthGuard } from './auth/auth.guard';
 import { ConfigModule } from '@nestjs/config';
 import { PostModule } from './post/post.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PostModule } from './post/post.module';
       envFilePath: '.env',
     }),
     PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [
