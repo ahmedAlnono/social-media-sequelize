@@ -17,6 +17,7 @@ import { FindPostDto } from './dto/find-post.dto';
 import { Public } from 'src/users/public.decorator';
 import { UserIdentity } from 'src/users/user-identity.decorator';
 import { UserPayload } from './dto/userIdentiti.dto';
+import { FindPostConditionally } from './dto/find-posts-conditionally.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -44,6 +45,12 @@ export class PostsController {
   }
 
   @Public()
+  @Get('test')
+  findPostConditionally(@Body() conditions: FindPostConditionally) {
+    return this.postsService.findConditionally(conditions);
+  }
+
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);
@@ -62,7 +69,7 @@ export class PostsController {
     return this.postsService.remove(findPostDto, user);
   }
 
-  @Get('user')
+  @Get('user-posts')
   findUserPosts(@UserIdentity() user: UserPayload) {
     return this.postsService.findUserPosts(user.sub);
   }

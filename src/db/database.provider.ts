@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Sequelize } from 'sequelize-typescript';
 import { Comment } from 'src/models/comment.model';
+import { Notification } from 'src/models/notification.model';
 import { Post } from 'src/models/post.model';
 import { User } from 'src/models/user.model';
 
@@ -17,7 +18,7 @@ export const databaseProviders = [
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
       });
-      sequelize.addModels([User, Post, Comment]);
+      sequelize.addModels([User, Post, Comment, Notification]);
       return sequelize;
     },
   },

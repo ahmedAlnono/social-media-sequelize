@@ -16,7 +16,7 @@ export class UserService {
 
   async findOne(id: number) {
     return await this.user.findByPk(id, {
-      attributes: ['name', 'email'],
+      attributes: ['name'],
     });
   }
 

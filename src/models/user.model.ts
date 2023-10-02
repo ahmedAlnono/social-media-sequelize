@@ -46,6 +46,9 @@ export class User extends Model {
   })
   hash: string;
 
+  @Column
+  avatar: string;
+
   @HasMany(() => Post)
   posts: Post[];
 

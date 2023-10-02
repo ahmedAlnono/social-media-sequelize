@@ -3,11 +3,11 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Reflector } from "@nestjs/core";
+import { JwtService } from "@nestjs/jwt";
+import { Request } from "express";
 
 @Injectable()
 export class GlobalAuthGuard implements CanActivate {
@@ -20,7 +20,7 @@ export class GlobalAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    const noAuth = this.reflector.get('noAuth', context.getHandler());
+    const noAuth = this.reflector.get("noAuth", context.getHandler());
     if (noAuth) {
       return true;
     }
@@ -29,7 +29,7 @@ export class GlobalAuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get('AUTH_SECRET'),
+        secret: this.configService.get("AUTH_SECRET"),
       });
       request.user = payload;
     } catch (e) {
@@ -39,7 +39,7 @@ export class GlobalAuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    return type === "Bearer" ? token : undefined;
   }
 }

@@ -11,14 +11,14 @@ import { POST_MODEL, USER_MODEL } from 'constants/constants';
 import { Post } from 'src/models/post.model';
 import { User } from 'src/models/user.model';
 import { UserPayload } from './dto/userIdentiti.dto';
+import { FindPostConditionally } from './dto/find-posts-conditionally.dto';
+import { Sequelize } from 'sequelize';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @Inject(POST_MODEL)
-    private post: typeof Post,
-    @Inject(USER_MODEL)
-    private user: typeof User,
+    @Inject(POST_MODEL) private post: typeof Post,
+    @Inject(USER_MODEL) private user: typeof User,
   ) {}
   async create(
     createPostDto: CreatePostDto,
@@ -26,17 +26,18 @@ export class PostsService {
     user: UserPayload,
   ) {
     try {
-      const posts = await this.post.findAll({
-        where: {
-          userId: user.sub,
-        },
-        order: [['id', 'DESC']],
-        limit: 5,
-      });
-      const postTime = posts[posts.length - 1].createdAt;
-      const nowDate = new Date();
-      const time = nowDate.getTime() - postTime.getTime();
-      const timeDifferenceInDays = Math.floor(time / (1000 * 60 * 60 * 24));
+      // const posts = await this.post.findAll({
+      //   where: {
+      //     userId: user.sub,
+      //   },
+      //   order: [['id', 'DESC']],
+      //   limit: 5,
+      // });
+      // const postTime = posts[posts.length - 1].createdAt;
+      // const nowDate = new Date();
+      // const time = nowDate.getTime() - postTime.getTime();
+      // const timeDifferenceInDays = Math.floor(time / (1000 * 60 * 60 * 24));
+      const timeDifferenceInDays = await this.checkDate(user.sub);
       if (timeDifferenceInDays >= 1) {
         const FileNames = [];
         let photos = '';
@@ -61,6 +62,21 @@ export class PostsService {
     } catch (e) {
       throw new BadRequestException('wrong data');
     }
+  }
+  async checkDate(userId: number) {
+    const posts = await this.post.findAll({
+      where: {
+        userId,
+      },
+      limit: 5,
+      order: [['id', 'DESC']],
+    });
+    const postTime = posts[posts.length - 1].createdAt;
+    const nowDate = new Date();
+    const time = nowDate.getTime() - postTime.getTime();
+    const timeDifferenceInDays = Math.floor(time / (1000 * 60 * 60 * 24));
+
+    return timeDifferenceInDays;
   }
 
   async findAll() {
@@ -91,6 +107,21 @@ export class PostsService {
     } catch (e) {
       throw new ForbiddenException('try again');
     }
+  }
+
+  async findConditionally(conditions: FindPostConditionally) {
+    let postsOrder = '';
+    if (conditions.newToOld) {
+      postsOrder = 'DESC';
+    } else {
+      postsOrder = 'ASC';
+    }
+    const posts = await this.post.findAll({
+      order: [['id', postsOrder]],
+      limit: conditions.limit || 15,
+      offset: conditions.offset || 0,
+    });
+    return posts;
   }
 
   async findOne(id: number) {
@@ -142,13 +173,8 @@ export class PostsService {
         userId: id,
       },
       order: [['createdAt', 'DESC']],
-      limit: 5,
+      limit: 20,
     });
-    const postTime = posts[posts.length - 1].createdAt;
-    const nowDate = new Date();
-    const time = nowDate.getTime() - postTime.getTime();
-    const timeDifferenceInDays = Math.floor(time / (1000 * 60 * 60 * 24));
-    console.log(timeDifferenceInDays);
     return posts;
   }
 }

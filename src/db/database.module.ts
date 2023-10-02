@@ -14,6 +14,8 @@ export class DatabaseModule {
       envFilePath = '.env';
     } else if (option === 'production') {
       envFilePath = '.env.production';
+    } else {
+      envFilePath = '.env.final';
     }
     return {
       imports: [

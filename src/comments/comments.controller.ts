@@ -13,6 +13,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { FindCommentDto } from './dto/find-comment.dto';
 import { UserIdentity } from 'src/users/user-identity.decorator';
 import { UserPayload } from 'src/posts/dto/userIdentiti.dto';
+import { Public } from 'src/users/public.decorator';
 
 @Controller('comments')
 export class CommentsController {
@@ -26,6 +27,7 @@ export class CommentsController {
     return this.commentsService.create(createCommentDto, user);
   }
 
+  @Public()
   @Get(':id')
   findAll(@Param('id', new ParseIntPipe()) id: number) {
     return this.commentsService.findAll(id);
@@ -39,6 +41,7 @@ export class CommentsController {
     return this.commentsService.edit(updateCommentDto, user);
   }
 
+  @Public()
   @Get('replys')
   findAllRebly(@Body() id: FindCommentDto) {
     return this.commentsService.findAllReplies(id.id);
